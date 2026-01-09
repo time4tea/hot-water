@@ -136,12 +136,6 @@ class config:
         self.address = i2c_addr
         self.i2c = I2C(1, scl=Pin(7), sda=Pin(6), freq=100_000)
 
-    def digital_write(self, pin, value):
-        pin.value(value)
-
-    def digital_read(self, pin):
-        return pin.value()
-
     def delay_ms(self, delaytime):
         utime.sleep(delaytime / 1000.0)
 
@@ -163,8 +157,8 @@ class config:
         return rbuf
 
     def module_exit(self):
-        self.digital_write(self.reset_pin, 0)
-        self.digital_write(self.trst_pin, 0)
+        self.reset_pin.value(0)
+        self.trst_pin.value(0)
 
 
 class EPD_2in9:
@@ -190,48 +184,46 @@ class EPD_2in9:
 
     # Hardware reset
     def reset(self):
-        self.config.digital_write(self.config.reset_pin, 1)
+        self.config.reset_pin.value(1)
         self.config.delay_ms(50)
-        self.config.digital_write(self.config.reset_pin, 0)
+        self.config.reset_pin.value(0)
         self.config.delay_ms(2)
-        self.config.digital_write(self.config.reset_pin, 1)
+        self.config.reset_pin.value(1)
         self.config.delay_ms(50)
 
     def send_command(self, command):
-        self.config.digital_write(self.config.dc_pin, 0)
-        self.config.digital_write(self.config.cs_pin, 0)
+        self.config.dc_pin.value(0)
+        self.config.cs_pin.value(0)
         self.config.spi_writebyte([command])
-        self.config.digital_write(self.config.cs_pin, 1)
+        self.config.cs_pin.value(1)
 
     def send_data(self, data):
-        self.config.digital_write(self.config.dc_pin, 1)
-        self.config.digital_write(self.config.cs_pin, 0)
+        self.config.dc_pin.value(1)
+        self.config.cs_pin.value(0)
         self.config.spi_writebyte([data])
-        self.config.digital_write(self.config.cs_pin, 1)
+        self.config.cs_pin.value(1)
 
-    def ReadBusy(self):
-        # print("e-Paper busy")
-        while self.config.digital_read(self.config.busy_pin) == 1:      #  0: idle, 1: busy
+    def wait_for_idle(self):
+        while self.config.busy_pin.value() == 1:      #  0: idle, 1: busy
             self.config.delay_ms(10)
-            # print("e-Paper busy release")
 
     def TurnOnDisplay(self):
         self.send_command(0x22) # DISPLAY_UPDATE_CONTROL_2
         self.send_data(0xF7)
         self.send_command(0x20) # MASTER_ACTIVATION
-        self.ReadBusy()
+        self.wait_for_idle()
 
     def TurnOnDisplay_Partial(self):
         self.send_command(0x22) # DISPLAY_UPDATE_CONTROL_2
         self.send_data(0x0F)
         self.send_command(0x20) # MASTER_ACTIVATION
-        self.ReadBusy()
+        self.wait_for_idle()
 
     def TurnOnDisplay_4Gray(self):
         self.send_command(0x22) # DISPLAY_UPDATE_CONTROL_2
         self.send_data(0xC7)
         self.send_command(0x20) # MASTER_ACTIVATION
-        self.ReadBusy()
+        self.wait_for_idle()
 
     def delay_ms(self, delaytime):
         utime.sleep(delaytime / 1000.0)
@@ -245,7 +237,7 @@ class EPD_2in9:
 
         for i in range(0, 153):
             self.send_data(lut[i])
-        self.ReadBusy()
+        self.wait_for_idle()
 
     def SetWindow(self, x_start, y_start, x_end, y_end):
         self.send_command(0x44) # SET_RAM_X_ADDRESS_START_END_POSITION
@@ -266,13 +258,13 @@ class EPD_2in9:
         self.send_command(0x4F) # SET_RAM_Y_ADDRESS_COUNTER
         self.send_data(y & 0xFF)
         self.send_data((y >> 8) & 0xFF)
-        self.ReadBusy()
+        self.wait_for_idle()
 
     def SetLut(self, lut):
         self.send_command(0x32)
         for i in range(0, 153):
             self.send_data(lut[i])
-        self.ReadBusy()
+        self.wait_for_idle()
         self.send_command(0x3f)
         self.send_data(lut[153])
         self.send_command(0x03)  # gate voltage
@@ -288,9 +280,9 @@ class EPD_2in9:
         # EPD hardware init start
         self.reset()
 
-        self.ReadBusy()
+        self.wait_for_idle()
         self.send_command(0x12)  #SWRESET
-        self.ReadBusy()
+        self.wait_for_idle()
 
         self.send_command(0x01) #Driver output control
         self.send_data(0x27)
@@ -307,16 +299,16 @@ class EPD_2in9:
         self.send_data(0x80)
 
         self.SetCursor(0, 0)
-        self.ReadBusy()
+        self.wait_for_idle()
         # EPD hardware init end
         return 0
 
     def init_4Gray(self):
         self.reset()
 
-        self.ReadBusy()
+        self.wait_for_idle()
         self.send_command(0x12)  #SWRESET
-        self.ReadBusy()
+        self.wait_for_idle()
 
         self.send_command(0x01) #Driver output control
         self.send_data(0x27)
@@ -332,7 +324,7 @@ class EPD_2in9:
         self.send_data(0x04)
 
         self.SetCursor(8, 0)
-        self.ReadBusy()
+        self.wait_for_idle()
 
         self.SetLut(Gray4)
         # EPD hardware init end
@@ -362,9 +354,9 @@ class EPD_2in9:
         if image is None:
             return
 
-        self.config.digital_write(self.config.reset_pin, 0)
+        self.config.reset_pin.value(0)
         self.config.delay_ms(0.2)
-        self.config.digital_write(self.config.reset_pin, 1)
+        self.config.reset_pin.value(1)
 
         self.SendLut(1)
         self.send_command(0x37)
@@ -385,7 +377,7 @@ class EPD_2in9:
         self.send_command(0x22)
         self.send_data(0xC0)
         self.send_command(0x20)
-        self.ReadBusy()
+        self.wait_for_idle()
 
         self.SetWindow(0, 0, self.width - 1, self.height - 1)
         self.SetCursor(0, 0)
@@ -495,11 +487,11 @@ class ICNT86:
         self.config = config(0x48)
 
     def ICNT_Reset(self):
-        self.config.digital_write(self.config.trst_pin, 1)
+        self.config.trst_pin.value(1)
         self.config.delay_ms(100)
-        self.config.digital_write(self.config.trst_pin, 0)
+        self.config.trst_pin.value(0)
         self.config.delay_ms(100)
-        self.config.digital_write(self.config.trst_pin, 1)
+        self.config.trst_pin.value(1)
         self.config.delay_ms(100)
 
     def ICNT_Write(self, Reg, Data):
@@ -587,17 +579,17 @@ epd.delay_ms(500)
 
 
 def pthread_irq():
-    if tp.config.digital_read(tp.config.int_pin) == 0:
+    if tp.config.int_pin.value() == 0:
         icnt_dev.Touch = 1
     else:
         icnt_dev.Touch = 0
 
 def get_key():
-    if tp.config.digital_read(tp.config.key0) == 0:
+    if tp.config.key0.value() == 0:
         return 1
-    elif tp.config.digital_read(tp.config.key1) == 0:
+    elif tp.config.key1.value() == 0:
         return 2
-    elif tp.config.digital_read(tp.config.key2) == 0:
+    elif tp.config.key2.value() == 0:
         return 3
     else:
         return 0
