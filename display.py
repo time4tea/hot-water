@@ -118,13 +118,16 @@ class config:
         self.dc_pin = Pin(8, Pin.OUT)
 
         self.spi = SPI(1)
-        self.spi.init(baudrate=4000_000)
+        self.spi.init(baudrate=20_000_000)
 
         self.address = i2c_addr
         self.i2c = I2C(1, scl=Pin(7), sda=Pin(6), freq=100_000)
 
     def delay_ms(self, delaytime):
         utime.sleep(delaytime / 1000.0)
+
+    def spi_writebytes(self, data):
+        self.spi.write(data)
 
     def spi_writebyte(self, data):
         self.spi.write(bytearray(data))
@@ -189,6 +192,26 @@ class LandscapeFrameBuffer(framebuf.FrameBuffer):
                 temp.pixel(self.height - 1 - y, x, color)
         return temp_backing
 
+class GreyscaleLut:
+
+    def __init__(self):
+        self.lutA = [0] * 256
+        self.lutB = [0] * 256
+
+        for v in range(256):
+            p1 = p2 = 0
+            for shift in (0, 2, 4, 6):
+                pix = (v >> shift) & 0x03
+
+                # pass 1: black + gray2
+                p1 = (p1 << 1) | (1 if pix < 2 else 0)
+
+                # pass 2: black + gray1
+                p2 = (p2 << 1) | (1 if pix in (0, 2) else 0)
+
+            self.lutA[v] = p1
+            self.lutB[v] = p2
+
 class EPD_2in9:
     def __init__(self, greyscale = False, landscape: bool = False):
         self.config = config(0x48)
@@ -204,6 +227,8 @@ class EPD_2in9:
 
         self.lut = WF_PARTIAL_2IN9
         self.lut_l = WF_PARTIAL_2IN9_Wait
+
+        self.gs_lut = None
 
         if landscape:
             self.fb = LandscapeFrameBuffer(self.height, self.width, greyscale)
@@ -223,6 +248,12 @@ class EPD_2in9:
         self.config.dc_pin.value(0)
         self.config.cs_pin.value(0)
         self.config.spi_writebyte([command])
+        self.config.cs_pin.value(1)
+
+    def send_datas(self, datas):
+        self.config.dc_pin.value(1)
+        self.config.cs_pin.value(0)
+        self.config.spi_writebytes(datas)
         self.config.cs_pin.value(1)
 
     def send_data(self, data):
@@ -306,6 +337,7 @@ class EPD_2in9:
 
     def init(self):
         if self.greyscale:
+            self.gs_lut = GreyscaleLut()
             self._init_greyscale()
         else:
             self._init_mono()
@@ -431,73 +463,25 @@ class EPD_2in9:
         self.TurnOnDisplay_Partial()
 
     def _display_grey(self):
-        self.send_command(0x24)
 
         b = self.fb.buffer()
 
-        for i in range(0, 4736):
-            temp3 = 0
-            for j in range(0, 2):
-                temp1 = b[i * 2 + j]
-                for k in range(0, 2):
-                    temp2 = temp1 & 0x03
-                    if temp2 == 0x03:
-                        temp3 |= 0x00  # white
-                    elif temp2 == 0x00:
-                        temp3 |= 0x01  # black
-                    elif temp2 == 0x02:
-                        temp3 |= 0x00  # gray1
-                    else:  # 0x01
-                        temp3 |= 0x01  # gray2
-                    temp3 <<= 1
+        out1 = bytearray(4736)
+        out2 = bytearray(4736)
 
-                    temp1 >>= 2
-                    temp2 = temp1 & 0x03
-                    if temp2 == 0x03:  # white
-                        temp3 |= 0x00
-                    elif temp2 == 0x00:  # black
-                        temp3 |= 0x01
-                    elif temp2 == 0x02:
-                        temp3 |= 0x00  # gray1
-                    else:  # 0x01
-                        temp3 |= 0x01  # gray2
+        lut = self.gs_lut
 
-                    if (j != 1) | (k != 1):
-                        temp3 <<= 1
-                    temp1 >>= 2
-            self.send_data(temp3)
+        for i in range(4736):
+            b0 = b[2*i]
+            b1 = b[2*i + 1]
 
+            out1[i] = (lut.lutA[b0] << 4) | lut.lutA[b1]
+            out2[i] = (lut.lutB[b0] << 4) | lut.lutB[b1]
+
+        self.send_command(0x24)
+        self.send_datas(out1)
         self.send_command(0x26)
-        for i in range(0, 4736):
-            temp3 = 0
-            for j in range(0, 2):
-                temp1 = b[i * 2 + j]
-                for k in range(0, 2):
-                    temp2 = temp1 & 0x03
-                    if temp2 == 0x03:
-                        temp3 |= 0x00  # white
-                    elif temp2 == 0x00:
-                        temp3 |= 0x01  # black
-                    elif temp2 == 0x02:
-                        temp3 |= 0x01  # gray1
-                    else:  # 0x01
-                        temp3 |= 0x00  # gray2
-                    temp3 <<= 1
-
-                    temp1 >>= 2
-                    temp2 = temp1 & 0x03
-                    if temp2 == 0x03:  # white
-                        temp3 |= 0x00
-                    elif temp2 == 0x00:  # black
-                        temp3 |= 0x01
-                    elif temp2 == 0x02:
-                        temp3 |= 0x01  # gray1
-                    else:  # 0x01
-                        temp3 |= 0x00  # gray2
-                    if j != 1 or k != 1:
-                        temp3 <<= 1
-                    temp1 >>= 2
-            self.send_data(temp3)
+        self.send_datas(out2)
 
         self.TurnOnDisplay_4Gray()
 
