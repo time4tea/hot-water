@@ -1,6 +1,6 @@
 
 
-# Home Thermostat Display
+# Home Hot Water Temperature Display
 
 This uses:
  - Raspberry Pi Pico W
