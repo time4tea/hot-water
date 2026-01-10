@@ -1,24 +1,70 @@
-import time
+import machine
 from machine import Pin
+from network import WLAN
 
+import umqtt.simple
 from display import EPD_2in9
-from writer import  Writer
+from writer import Writer
+from secrets import secrets
+import ubuntu
+
+def do_connect(ssid: str, key: str):
+    import machine, network
+    wlan = network.WLAN()
+    wlan.active(True)
+    if not wlan.isconnected():
+        print('connecting to network...')
+        wlan.connect(ssid, key)
+        while not wlan.isconnected():
+            machine.idle()
+    print('network config:', wlan.ipconfig('addr4'))
+
+
+class Display:
+    def __init__(self, epd, w):
+        self.epd = epd
+        self.w = w
+
+    def show_status(self, text):
+        self.epd.fb.fill_rect(0, 0, 296, 128, self.epd.black)
+        self.epd.fb.text(text, 0, 0, self.epd.white)
+        self.epd.display()
+
+    def show_temp(self, value):
+        self.epd.fb.fill_rect(0, 0, 296, 128, self.epd.white)
+        self.w.set_textpos(20,10)
+        self.w.printstring(value, invert=True)
+        self.epd.display()
 
 led = Pin("LED", Pin.OUT)
 
 epd = EPD_2in9(greyscale=True, landscape=True)
+wu = Writer(epd.fb, ubuntu)
 
-# epd.clear(0xff)
-# epd.TurnOnDisplay()
+d = Display(epd, wu)
 
 epd.init()
-epd.fb.fill_rect(0, 0, 296, 32, epd.black)
-epd.fb.text('GRAY1', 128, 8, epd.white)
-epd.fb.fill_rect(0, 32, 296, 32, epd.darkgray)
-epd.fb.text('GRAY2', 128, 40, epd.grayish)
-epd.fb.fill_rect(0, 64, 296, 32, epd.grayish)
-epd.fb.text('GRAY3', 128, 72, epd.darkgray)
-epd.fb.fill_rect(0, 96, 296, 32, epd.white)
-epd.fb.text('GRAY4', 128, 104, epd.black)
-epd.display()
+
+d.show_status("Connecting...")
+
+do_connect(secrets["ssid"], secrets["pw"])
+
+def cb(topic, value):
+    print(value)
+    temp = f"{float(value):#.1f}"
+    d.show_temp(temp)
+
+mq = umqtt.simple.MQTTClient(client_id="therm", server="192.168.0.95")
+mq.connect()
+
+d.show_temp("??")
+
+mq.set_callback(cb)
+mq.subscribe("sensor.hw.temp")
+
+while True:
+    r = mq.wait_msg()
+    if r is None:
+        machine.soft_reset()
+
 

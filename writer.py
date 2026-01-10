@@ -35,6 +35,9 @@ class DisplayState:
 
 
 def _get_id(device):
+
+    print(f"Device is {type(device)}")
+
     if not isinstance(device, framebuf.FrameBuffer):
         raise ValueError("Device must be derived from FrameBuffer.")
     return id(device)
@@ -45,18 +48,17 @@ class Writer:
 
     state = {}  # Holds a display state for each device
 
-    @staticmethod
-    def set_textpos(device, row=None, col=None):
-        devid = _get_id(device)
+    def set_textpos(self, row=None, col=None):
+        devid = self.devid
         if devid not in Writer.state:
             Writer.state[devid] = DisplayState()
         s = Writer.state[devid]  # Current state
         if row is not None:
-            if row < 0 or row >= device.height:
+            if row < 0 or row >= self.device.height:
                 raise ValueError("row is out of range")
             s.text_row = row
         if col is not None:
-            if col < 0 or col >= device.width:
+            if col < 0 or col >= self.device.width:
                 raise ValueError("col is out of range")
             s.text_col = col
         return s.text_row, s.text_col
