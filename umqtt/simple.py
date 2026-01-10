@@ -1,7 +1,7 @@
 import socket
 import struct
-from binascii import hexlify
 
+# from: https://github.com/micropython/micropython-lib
 
 class MQTTException(Exception):
     pass
