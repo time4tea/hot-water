@@ -177,18 +177,12 @@ class LandscapeFrameBuffer(framebuf.FrameBuffer):
 
     @micropython.native
     def buffer(self):
-        # Create a new buffer with swapped dimensions (Landscape)
         temp_backing = bytearray(self.size)
         temp = framebuf.FrameBuffer(temp_backing, self.height, self.width, self.format)
 
         for x in range(self.width):
             for y in range(self.height):
-                # Grab the pixel from the original (Portrait) buffer
                 color = self.pixel(x, y)
-
-                # Apply 90-degree clockwise rotation logic:
-                # New X = height - 1 - y
-                # New Y = x
                 temp.pixel(self.height - 1 - y, x, color)
         return temp_backing
 
