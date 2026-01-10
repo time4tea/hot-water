@@ -15,6 +15,7 @@ aka: Is there any hot water?
 
 ![getting cooler](marketing/20260110_212944.jpg)
 ![heating up](marketing/20260110_213020.jpg)
+![reverse](marketing/20260110_220339.jpg)
 
 ### Pico Setup
 
