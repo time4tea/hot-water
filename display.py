@@ -26,6 +26,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
+import micropython
 from machine import Pin, SPI, I2C
 import framebuf
 import utime
@@ -171,6 +172,7 @@ class LandscapeFrameBuffer(framebuf.FrameBuffer):
         self.format = framebuf.GS2_HMSB if greyscale else framebuf.MONO_HLSB
         super().__init__(self.backing, self.width, self.height, self.format)
 
+    @micropython.native
     def buffer(self):
         # Create a new buffer with swapped dimensions (Landscape)
         temp_backing = bytearray(self.size)

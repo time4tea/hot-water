@@ -241,7 +241,18 @@ class Writer:
             for i, v in enumerate(buf):
                 buf[i] = 0xFF & ~v
         fbc = framebuf.FrameBuffer(buf, self.char_width, self.char_height, self.map)
-        self.device.blit(fbc, s.text_col, s.text_row)
+        # self.device.blit(fbc, s.text_col, s.text_row)
+
+        text_color = 3
+        bg_color = 0
+
+        for r in range(self.char_height):
+            for c in range(self.char_width):
+                if fbc.pixel(c, r):
+                    self.device.pixel(s.text_col + c, s.text_row + r, text_color)
+                else:
+                    self.device.pixel(s.text_col + c, s.text_row + r, bg_color)
+
         s.text_col += self.char_width
         self.cpos += 1
 
