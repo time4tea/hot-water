@@ -147,48 +147,45 @@ class config:
         self.trst_pin.value(0)
 
 
-class LandscapeFrameBuffer:
-    def __init__(self, fb: framebuf.FrameBuffer, width: int, height: int):
-        self.fb = fb
-        self.p_w = width
-        self.p_h = height
-
-    def _check_bounds(self, x, y):
-        if x > self.p_w or y > self.p_h:
-            raise ValueError(f"outside bounds ({x} > {self.p_w}) or ({y} > {self.p_h}")
-
-    def fill_rect(self, x, y, w, h, c):
-        self._check_bounds(x, y)
-        self._check_bounds(x + w, y + h)
-        nx = (self.p_w - 1) - (y + h - 1)
-        ny = x
-        print(f"Filling {nx}, {ny} -> {w}, {h} ")
-        self.fb.fill_rect(nx, ny, h, w, c)
-
-    def hline(self, x, y, w, c):
-        self._check_bounds(x, y)
-        self._check_bounds(x + w, y)
-        # A horizontal line in landscape is a vertical line in portrait
-        self.fb.vline((self.p_w - 1) - y, x, w, c)
-
-    def vline(self, x, y, h, c):
-        # A vertical line in landscape is a horizontal line in portrait
-        self.fb.hline((self.p_w - 1) - (y + h - 1), x, h, c)
-
-    def line(self, x1, y1, x2, y2, c):
-        self.fb.line((self.p_w - 1) - y1, x1, (self.p_w - 1) - y2, x2, c)
-
-    def text(self, *args):
-        raise NotImplementedError()
-
 class PortraitFrameBuffer(framebuf.FrameBuffer):
     def __init__(self, width, height, greyscale=True):
         divisor = 4 if greyscale else 8
+        self.height = height
+        self.width = width
         self.backing = bytearray(height * width // divisor)
         super().__init__(self.backing, width, height, framebuf.GS2_HMSB if greyscale else framebuf.MONO_HLSB)
 
     def buffer(self):
         return self.backing
+
+
+class LandscapeFrameBuffer(framebuf.FrameBuffer):
+    def __init__(self, width, height, greyscale=True):
+        self.divisor = 4 if greyscale else 8
+        self.height = height
+        self.width = width
+
+        self.size = height * width // self.divisor
+
+        self.backing = bytearray(self.size)
+        self.format = framebuf.GS2_HMSB if greyscale else framebuf.MONO_HLSB
+        super().__init__(self.backing, self.width, self.height, self.format)
+
+    def buffer(self):
+        # Create a new buffer with swapped dimensions (Landscape)
+        temp_backing = bytearray(self.size)
+        temp = framebuf.FrameBuffer(temp_backing, self.height, self.width, self.format)
+
+        for x in range(self.width):
+            for y in range(self.height):
+                # Grab the pixel from the original (Portrait) buffer
+                color = self.pixel(x, y)
+
+                # Apply 90-degree clockwise rotation logic:
+                # New X = height - 1 - y
+                # New Y = x
+                temp.pixel(self.height - 1 - y, x, color)
+        return temp_backing
 
 class EPD_2in9:
     def __init__(self, greyscale = False, landscape: bool = False):
@@ -206,7 +203,10 @@ class EPD_2in9:
         self.lut = WF_PARTIAL_2IN9
         self.lut_l = WF_PARTIAL_2IN9_Wait
 
-        self.fb = PortraitFrameBuffer(self.width, self.height, greyscale)
+        if landscape:
+            self.fb = LandscapeFrameBuffer(self.height, self.width, greyscale)
+        else:
+            self.fb = PortraitFrameBuffer(self.width, self.height, greyscale)
 
     # Hardware reset
     def reset(self):
