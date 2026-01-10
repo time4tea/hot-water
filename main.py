@@ -65,8 +65,7 @@ class State:
             self.temp = latest_temp
 
         elif topic == b'sensor.hw.status':
-            if value == b'heat_water':
-                self.heating = True
+            self.heating = value == b'heat_water'
 
     def draw(self, d: Display):
         d.clear()
