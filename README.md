@@ -83,3 +83,7 @@ This is generated using font_to_py. Here is the command line I used.
 ```bash
 ./venv/bin/python3 ./font_to_py.py /usr/share/fonts/truetype/ubuntu/UbuntuSans\[wdth\,wght\].ttf -c '0123456789.?' 90 ubuntu.py
 ```
+
+### YMMV!
+
+This was written on a rainy Saturday - no tests! - seems to work though
