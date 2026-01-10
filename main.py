@@ -58,6 +58,7 @@ class State:
 
         if topic == b"sensor.hw.temp":
             latest_temp = float(value)
+            print(f"Temperature update to {latest_temp}")
 
             if self.temp is not None:
                 self.increasing = latest_temp > self.temp
@@ -65,6 +66,7 @@ class State:
             self.temp = latest_temp
 
         elif topic == b'sensor.hw.status':
+            print(f"Heating update tp {value}")
             self.heating = value == b'heat_water'
 
     def draw(self, d: Display):
@@ -106,9 +108,12 @@ mq.set_callback(s.cb)
 mq.subscribe("sensor.hw.temp")
 mq.subscribe("sensor.hw.status")
 
+s.draw(d)
+
 while True:
-    r = mq.wait_msg()
-    if r is None:
+    try:
+        r = mq.wait_msg()
+        if r is not None:
+            s.draw(d)
+    except OSError:
         machine.soft_reset()
-    else:
-        s.draw(d)
