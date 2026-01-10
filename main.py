@@ -1,5 +1,4 @@
 import machine
-from machine import Pin
 
 import images
 import ubuntu
@@ -37,19 +36,60 @@ class Display:
         self.w.set_textpos(20, 10)
         self.w.printstring(value, invert=True)
 
-    def image(self, image: images.Bitmap):
-        image.blit(self.epd.fb, 296 - (image.width + 4), (128 // 2) - (image.height // 2), self.epd.black, self.epd.white)
+    def arrow(self, image: images.Bitmap):
+        image.blit(self.epd.fb, 296 - (image.width + 4), (128 // 2) - (image.height + 8), self.epd.black,
+                   self.epd.white)
+
+    def heat(self, image: images.Bitmap):
+        image.blit(self.epd.fb, 296 - (image.width + 4), (128 // 2) + 8, self.epd.black, self.epd.white)
 
     def update(self):
         self.epd.display()
 
 
-led = Pin("LED", Pin.OUT)
+class State:
+    def __init__(self):
+        self.temp = None
+        self.heating = False
+        self.increasing = None
+
+    def cb(self, topic, value):
+        print(f"{topic} -> {value}")
+
+        if topic == b"sensor.hw.temp":
+            latest_temp = float(value)
+
+            if self.temp is not None:
+                self.increasing = latest_temp > self.temp
+
+            self.temp = latest_temp
+
+        elif topic == b'sensor.hw.status':
+            if value == b'heat_water':
+                self.heating = True
+
+    def draw(self, d: Display):
+        d.clear()
+        if self.temp is None:
+            d.show_temp("??")
+        else:
+            d.show_temp(f"{self.temp:#.1f}")
+
+        if self.increasing is not None:
+            d.arrow(images.up if self.increasing else images.down)
+
+        if self.heating:
+            d.heat(images.heat)
+
+        d.update()
+
 
 epd = EPD_2in9(greyscale=True, landscape=True)
 wu = Writer(epd.fb, ubuntu)
 
 d = Display(epd, wu)
+
+s = State()
 
 epd.init()
 
@@ -58,38 +98,18 @@ d.update()
 
 do_connect(config["wlan"]["ssid"], config["wlan"]["pw"])
 
-last_temp = None
-
-
-def cb(topic, value):
-    global last_temp
-    print(value)
-
-    temp = float(value)
-    d.clear()
-    d.show_temp(f"{temp:#.1f}")
-
-    if last_temp is not None:
-        if temp < last_temp:
-            d.image(images.down)
-        else:
-            d.image(images.up)
-
-    last_temp = temp
-    d.update()
-
-
 mq = umqtt.simple.MQTTClient(client_id=config["mqtt"]["name"], server=config["mqtt"]["server"])
 mq.connect()
 
-d.clear()
-d.show_temp("??")
-d.update()
+s.draw(d)
 
-mq.set_callback(cb)
+mq.set_callback(s.cb)
 mq.subscribe("sensor.hw.temp")
+mq.subscribe("sensor.hw.status")
 
 while True:
     r = mq.wait_msg()
     if r is None:
         machine.soft_reset()
+    else:
+        s.draw(d)
