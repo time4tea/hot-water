@@ -11,6 +11,11 @@ This uses:
 
 aka: Is there any hot water?
 
+### Pictures
+
+![getting cooler](marketing/20260110_212944.jpg)
+![heating up](marketing/20260110_213020.jpg)
+
 ### Pico Setup
 
 Copy the file 'config-example.py' to 'config.py' and fill in the relevant values. Deploy to your Pico W.
