@@ -13,6 +13,7 @@ from writer import Writer
 
 led = machine.Pin("LED", machine.Pin.OUT)
 
+
 class RemoteDebug:
     def __init__(self, ip, port):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -23,9 +24,11 @@ class RemoteDebug:
     def send(self, data):
         self.socket.sendto(data, (self.ip, self.port))
 
+
 class NoRemoteDebug:
-    def send(self,data):
+    def send(self, data):
         pass
+
 
 class Flasher:
     def __init__(self):
@@ -38,7 +41,9 @@ class Flasher:
             self.pin.low()
             time.sleep_ms(50)
 
+
 flasher = Flasher()
+
 
 def do_connect(ssid: str, key: str, timeout_ms=15000):
     wlan = network.WLAN(network.STA_IF)
@@ -144,21 +149,23 @@ class State:
         d.update()
 
 
+epd = EPD_2in9(greyscale=True, landscape=True)
+flasher.flash(2)
+wu = Writer(epd.fb, ubuntu)
+
+d = Display(epd, wu)
+
+s = State()
+
+epd.init()
+flasher.flash(3)
+d.show_status("Connecting...")
+d.update()
+
+flasher.flash(2)
+
 try:
-    epd = EPD_2in9(greyscale=True, landscape=True)
-    flasher.flash(2)
-    wu = Writer(epd.fb, ubuntu)
 
-    d = Display(epd, wu)
-
-    s = State()
-
-    epd.init()
-    flasher.flash(3)
-    d.show_status("Connecting...")
-    d.update()
-
-    flasher.flash(2)
     wifi = do_connect(config["wlan"]["ssid"], config["wlan"]["pw"])
 
     if wifi is None:
@@ -200,6 +207,8 @@ try:
                 flasher.flash(1)
         except OSError:
             machine.soft_reset()
-except:
+except Exception as e:
+    d.show_status(f"Problem... {e}")
+    d.update()
     flasher.flash(50)
     raise
