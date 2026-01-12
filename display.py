@@ -131,7 +131,7 @@ class config():
 
         # dc_pin *must* be defined after SPI. idk why
         self.spi = SPI(1)
-        self.spi.init(baudrate=4_000_000)
+        self.spi.init(baudrate=20_000_000)
 
         self.dc_pin = Pin(DC_PIN, Pin.OUT)
 
