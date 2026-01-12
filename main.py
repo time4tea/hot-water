@@ -1,23 +1,78 @@
-import machine
+import time
 
 import images
+import machine
+import network
+import socket
+
 import ubuntu
 import umqtt.simple
-from display import EPD_2in9
 from config import config
+from display import EPD_2in9
 from writer import Writer
 
+led = machine.Pin("LED", machine.Pin.OUT)
 
-def do_connect(ssid: str, key: str):
-    import machine, network
-    wlan = network.WLAN()
+class Remote:
+    def __init__(self, ip, port):
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.ip = ip
+        self.port = port
+
+    def send(self, data):
+        self.socket.sendto(data, (self.ip, self.port))
+
+class Flasher:
+    def __init__(self):
+        self.pin = machine.Pin("LED", machine.Pin.OUT)
+
+    def flash(self, n):
+        for x in range(0, n):
+            self.pin.high()
+            time.sleep_ms(50)
+            self.pin.low()
+            time.sleep_ms(50)
+
+flasher = Flasher()
+
+def do_connect(ssid: str, key: str, timeout_ms=15000):
+    wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
-    if not wlan.isconnected():
-        print('connecting to network...')
-        wlan.connect(ssid, key)
-        while not wlan.isconnected():
-            machine.idle()
-    print('network config:', wlan.ipconfig('addr4'))
+    time.sleep_ms(500)  # give firmware a chance
+
+    if wlan.isconnected():
+        led.on()
+        return wlan
+
+    wlan.connect(ssid, key)
+    start = time.ticks_ms()
+
+    while True:
+        status = wlan.status()
+
+        if status == network.STAT_CONNECTING:
+            print("Connecting")
+            flasher.flash(1)
+
+        if status == network.STAT_GOT_IP:
+            print("Got IP")
+            flasher.flash(2)
+            return wlan
+
+        if status == network.STAT_CONNECT_FAIL:
+            print("Failed retrying")
+            flasher.flash(10)
+            wlan.disconnect()
+            time.sleep_ms(1000)
+            wlan.connect(ssid, key)
+
+        if time.ticks_diff(time.ticks_ms(), start) > timeout_ms:
+            print("Gave up")
+            led.off()
+            return None
+
+        time.sleep_ms(200)
 
 
 class Display:
@@ -85,35 +140,96 @@ class State:
         d.update()
 
 
-epd = EPD_2in9(greyscale=True, landscape=True)
-wu = Writer(epd.fb, ubuntu)
+flasher.flash(1)
 
-d = Display(epd, wu)
+wifi = do_connect(config["wlan"]["ssid"], config["wlan"]["pw"])
+remote = Remote('192.168.0.127', 1880)
 
 s = State()
 
-epd.init()
+remote.send(b'Connecting to mq')
 
-d.show_status("Connecting...")
-d.update()
-
-do_connect(config["wlan"]["ssid"], config["wlan"]["pw"])
+flasher.flash(10)
+print("Connecting to mq")
 
 mq = umqtt.simple.MQTTClient(client_id=config["mqtt"]["name"], server=config["mqtt"]["server"])
 mq.connect()
 
-s.draw(d)
+remote.send(b'Connected to mq')
+print("Connected to mq")
 
 mq.set_callback(s.cb)
 mq.subscribe("sensor.hw.temp")
 mq.subscribe("sensor.hw.status")
+remote.send(b'Subscribed')
 
-s.draw(d)
 
 while True:
     try:
         r = mq.wait_msg()
         if r is not None:
-            s.draw(d)
+            remote.send("Updating display")
     except OSError:
         machine.soft_reset()
+
+
+
+# try:
+#
+#     epd = EPD_2in9(greyscale=True, landscape=True)
+#     flasher.flash(2)
+#     wu = Writer(epd.fb, ubuntu)
+#
+#     d = Display(epd, wu)
+#
+#     s = State()
+#
+#     epd.init()
+#     flasher.flash(3)
+#     d.show_status("Connecting...")
+#     d.update()
+#
+#     flasher.flash(2)
+#     wifi = do_connect(config["wlan"]["ssid"], config["wlan"]["pw"])
+#
+#     if wifi is None:
+#         d.show_status("didn't connect ...")
+#         d.update()
+#     else:
+#         d.show_status(wifi.ifconfig()[0])
+#         d.update()
+#
+#     remote = Remote('192.168.0.127', 1880)
+#
+#     remote.send(b'Connecting to mq')
+#
+#     flasher.flash(10)
+#     print("Connecting to mq")
+#
+#     mq = umqtt.simple.MQTTClient(client_id=config["mqtt"]["name"], server=config["mqtt"]["server"])
+#     mq.connect()
+#
+#     remote.send(b'Connected to mq')
+#     print("Connected to mq")
+#     s.draw(d)
+#
+#     mq.set_callback(s.cb)
+#     mq.subscribe("sensor.hw.temp")
+#     mq.subscribe("sensor.hw.status")
+#
+#     s.draw(d)
+#     flasher.flash(1)
+#     remote.send("Updating display")
+#
+#     while True:
+#         try:
+#             r = mq.wait_msg()
+#             if r is not None:
+#                 remote.send("Updating display")
+#                 s.draw(d)
+#                 flasher.flash(1)
+#         except OSError:
+#             machine.soft_reset()
+# except:
+#     flasher.flash(50)
+#     raise

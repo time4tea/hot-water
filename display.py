@@ -118,7 +118,7 @@ class config:
         self.dc_pin = Pin(8, Pin.OUT)
 
         self.spi = SPI(1)
-        self.spi.init(baudrate=20_000_000)
+        self.spi.init(baudrate=4_000_000)
 
         self.address = i2c_addr
         self.i2c = I2C(1, scl=Pin(7), sda=Pin(6), freq=100_000)
