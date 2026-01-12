@@ -36,47 +36,47 @@ EPD_WIDTH = 128
 EPD_HEIGHT = 296
 
 WF_PARTIAL_2IN9 = [
-    0x0, 0x40, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x80, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x40, 0x40, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0A, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x0, 0x0, 0x0,
-    0x22, 0x17, 0x41, 0xB0, 0x32, 0x36,
+    0x0,0x40,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x80,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x40,0x40,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0A,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x1,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x1,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x22,0x22,0x22,0x22,0x22,0x22,0x0,0x0,0x0,
+    0x22,0x17,0x41,0xB0,0x32,0x36,
 ]
 
 WF_PARTIAL_2IN9_Wait = [
-    0x0, 0x40, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x80, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x40, 0x40, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0A, 0x0, 0x0, 0x0, 0x0, 0x0, 0x2,
-    0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x0, 0x0, 0x0,
-    0x22, 0x17, 0x41, 0xB0, 0x32, 0x36,
+    0x0,0x40,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x80,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x40,0x40,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0A,0x0,0x0,0x0,0x0,0x0,0x2,
+    0x1,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x1,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x0,0x0,0x0,0x0,0x0,0x0,0x0,
+    0x22,0x22,0x22,0x22,0x22,0x22,0x0,0x0,0x0,
+    0x22,0x17,0x41,0xB0,0x32,0x36,
 ]
 
 Gray4 = [
@@ -129,10 +129,8 @@ class config():
         self.key1 = Pin(KEY1, Pin.IN, Pin.PULL_UP)
         self.key2 = Pin(KEY2, Pin.IN, Pin.PULL_UP)
 
-        # dc_pin *must* be defined after SPI. idk why
         self.spi = SPI(1)
         self.spi.init(baudrate=4_000_000)
-
         self.dc_pin = Pin(DC_PIN, Pin.OUT)
 
         self.address = i2c_addr
@@ -236,8 +234,7 @@ class EPD_2in9:
 
         self.lut = WF_PARTIAL_2IN9
         self.lut_l = WF_PARTIAL_2IN9_Wait
-
-        self.gs_lut = None
+        self.gs_lut = GreyscaleLut()
 
         if landscape:
             self.fb = LandscapeFrameBuffer(self.height, self.width, greyscale)
@@ -346,7 +343,6 @@ class EPD_2in9:
 
     def init(self):
         if self.greyscale:
-            self.gs_lut = GreyscaleLut()
             self._init_greyscale()
         else:
             self._init_mono()
@@ -405,36 +401,36 @@ class EPD_2in9:
         # EPD hardware init end
         return 0
 
-
     def display(self):
         if self.greyscale:
             self._display_grey()
         else:
-            self._display()
+            self._display(self.fb.buffer())
 
-
-    def _display(self):
-        self.send_command(0x24)  # WRITE_RAM
-
-        b = self.fb.buffer()
-
-        for i in range(0, self.height * int(self.width / 8)):
-            self.send_data(b[i])
+    def _display(self, image):
+        if image is None:
+            return
+        self.send_command(0x24) # WRITE_RAM
+        for i in range(0, self.height * int(self.width/8)):
+            # for i in range(0, int(self.width / 8)):
+            self.send_data(image[i])
         self.TurnOnDisplay()
 
-    def _display_x(self):
-        self.send_command(0x24)  # WRITE_RAM
-
-        b = self.fb.buffer()
-
-        for i in range(0, self.height * int(self.width / 8)):
-            self.send_data(b[i])
-        self.send_command(0x26)  # WRITE_RAM
-        for i in range(0, self.height * int(self.width / 8)):
-            self.send_data(b[i])
+    def display_Base(self, image):
+        if image is None:
+            return
+        self.send_command(0x24) # WRITE_RAM
+        for i in range(0, self.height * int(self.width/8)):
+            self.send_data(image[i])
+        self.send_command(0x26) # WRITE_RAM
+        for i in range(0, self.height * int(self.width/8)):
+            self.send_data(image[i])
         self.TurnOnDisplay()
 
-    def _display_partial(self):
+    def display_Partial(self, image):
+        if (image == None):
+            return
+
         self.config.reset_pin.value(0)
         self.config.delay_ms(0.2)
         self.config.reset_pin.value(1)
@@ -463,12 +459,9 @@ class EPD_2in9:
         self.SetWindow(0, 0, self.width - 1, self.height - 1)
         self.SetCursor(0, 0)
 
-        self.send_command(0x24)  # WRITE_RAM
-
-        b = self.fb.buffer()
-
-        for i in range(0, self.height * int(self.width / 8)):
-            self.send_data(b[i])
+        self.send_command(0x24) # WRITE_RAM
+        for i in range(0, self.height * int(self.width/8)):
+            self.send_data(image[i])
         self.TurnOnDisplay_Partial()
 
     def _display_grey(self):
@@ -494,7 +487,7 @@ class EPD_2in9:
 
         self.TurnOnDisplay_4Gray()
 
-    def clear(self, color):
+    def Clear(self, color):
         self.send_command(0x24)  # WRITE_RAM
         for i in range(0, self.height * int(self.width / 8)):
             self.send_data(color)
@@ -506,244 +499,3 @@ class EPD_2in9:
 
         self.config.delay_ms(2000)
         self.module_exit()
-
-
-class ICNT_Development:
-    def __init__(self):
-        self.Touch = 0
-        self.TouchGestureid = 0
-        self.TouchCount = 0
-
-        self.TouchEvenid = [0, 1, 2, 3, 4]
-        self.X = [0, 1, 2, 3, 4]
-        self.Y = [0, 1, 2, 3, 4]
-        self.P = [0, 1, 2, 3, 4]
-
-
-class ICNT86:
-    def __init__(self):
-        self.config = config(0x48)
-
-    def ICNT_Reset(self):
-        self.config.trst_pin.value(1)
-        self.config.delay_ms(100)
-        self.config.trst_pin.value(0)
-        self.config.delay_ms(100)
-        self.config.trst_pin.value(1)
-        self.config.delay_ms(100)
-
-    def ICNT_Write(self, Reg, Data):
-        self.config.i2c_writebyte(Reg, Data)
-
-    def ICNT_Read(self, Reg, len):
-        return self.config.i2c_readbyte(Reg, len)
-
-    def ICNT_ReadVersion(self):
-        buf = self.ICNT_Read(0x000a, 4)
-        print(buf)
-
-    def ICNT_Init(self):
-        self.ICNT_Reset()
-        self.ICNT_ReadVersion()
-
-    def ICNT_Scan(self, ICNT_Dev, ICNT_Old):
-        buf = []
-        mask = 0x00
-
-        if ICNT_Dev.Touch == 1:
-            ICNT_Dev.Touch = 0
-            buf = self.ICNT_Read(0x1001, 1)
-
-            if buf[0] == 0x00:
-                self.ICNT_Write(0x1001, mask)
-                self.config.delay_ms(1)
-                # print("buffers status is 0")
-                return
-            else:
-                ICNT_Dev.TouchCount = buf[0]
-
-                if ICNT_Dev.TouchCount > 5 or ICNT_Dev.TouchCount < 1:
-                    self.ICNT_Write(0x1001, mask)
-                    ICNT_Dev.TouchCount = 0
-                    # print("TouchCount number is wrong")
-                    return
-
-                buf = self.ICNT_Read(0x1002, ICNT_Dev.TouchCount * 7)
-                self.ICNT_Write(0x1001, mask)
-
-                ICNT_Old.X[0] = ICNT_Dev.X[0]
-                ICNT_Old.Y[0] = ICNT_Dev.Y[0]
-                ICNT_Old.P[0] = ICNT_Dev.P[0]
-
-                for i in range(0, ICNT_Dev.TouchCount, 1):
-                    ICNT_Dev.TouchEvenid[i] = buf[6 + 7 * i]
-                    # ICNT_Dev.X[i] = ((buf[2 + 7*i] << 8) + buf[1 + 7*i])
-                    # ICNT_Dev.Y[i] = ((buf[4 + 7*i] << 8) + buf[3 + 7*i])
-                    ICNT_Dev.X[i] = 127 - ((buf[4 + 7 * i] << 8) + buf[3 + 7 * i])
-                    ICNT_Dev.Y[i] = ((buf[2 + 7 * i] << 8) + buf[1 + 7 * i])
-                    ICNT_Dev.P[i] = buf[5 + 7 * i]
-
-                print(ICNT_Dev.X[0], ICNT_Dev.Y[0], ICNT_Dev.P[0])
-                return
-        return
-
-
-if __name__ == '__main__':
-
-    flag_t = NumSelect = 1
-    ReFlag = SelfFlag = temp = isHide = key_value = 0
-    buf = ['$', '1', '9', '.', '8', '9']
-
-    epd = EPD_2in9()
-    icnt_dev = ICNT_Development()
-    icnt_old = ICNT_Development()
-
-    '''
-        Because the touch display requires a relatively fast refresh speed, the default 
-        needs to use partial refresh, and four gray levels cannot be used in this mode. 
-        Here, only four gray level picture refresh demonstration is used
-    '''
-    epd.init_4Gray()
-    epd.image4Gray.fill_rect(0, 0, 127, 74, epd.black)
-    epd.image4Gray.text('GRAY1', 10, 33, epd.white)
-    epd.image4Gray.fill_rect(0, 74, 127, 74, epd.darkgray)
-    epd.image4Gray.text('GRAY2', 10, 107, epd.grayish)
-    epd.image4Gray.fill_rect(0, 148, 127, 74, epd.grayish)
-    epd.image4Gray.text('GRAY3', 10, 181, epd.darkgray)
-    epd.image4Gray.fill_rect(0, 222, 127, 74, epd.white)
-    epd.image4Gray.text('GRAY4', 10, 255, epd.black)
-    epd.display_4Gray(epd.buffer_4Gray)
-    epd.delay_ms(500)
-
-
-    def pthread_irq():
-        if tp.config.int_pin.value() == 0:
-            icnt_dev.Touch = 1
-        else:
-            icnt_dev.Touch = 0
-
-
-    def get_key():
-        if tp.config.key0.value() == 0:
-            return 1
-        elif tp.config.key1.value() == 0:
-            return 2
-        elif tp.config.key2.value() == 0:
-            return 3
-        else:
-            return 0
-
-
-    epd.init()
-
-    tp = ICNT86()
-    tp.ICNT_Init()
-    # epd.image1Gray_Portrait.Clear(0xff)
-
-    # tp.config.int_pin.irq(pthread_irq(), Pin.IRQ_FALLING)
-
-    epd.image1Gray_Portrait.fill(0xff)
-    epd.image1Gray_Portrait.rect(5, 10, 51, 14, 0x00)
-    epd.image1Gray_Portrait.text("Select", 7, 13, 0x00)
-    epd.image1Gray_Portrait.rect(72, 10, 51, 14, 0x00)
-    epd.image1Gray_Portrait.text("Adjust", 74, 13, 0x00)
-
-    epd.image1Gray_Portrait.rect(30, 240, 66, 18, 0x00)
-    epd.image1Gray_Portrait.text("Display", 35, 245, 0x00)
-
-    epd.image1Gray_Portrait.rect(21, 270, 82, 18, 0x00)
-    epd.image1Gray_Portrait.text("Show/Hied", 26, 275, 0x00)
-
-    epd.image1Gray_Portrait.text("On Sale!!!", 10, 50, 0x00)
-    epd.image1Gray_Portrait.text("Discount %30", 10, 75, 0x00)
-    epd.image1Gray_Portrait.text("Price: ", 10, 100, 0x00)
-    epd.image1Gray_Portrait.text(''.join(buf), 66, 100, 0x00)
-
-    for i in range(0, 5):
-        epd.image1Gray_Portrait.fill_rect(10 + 50, 135 + i * 10, 50, 5, 0x00)
-    for i in range(0, 5):
-        epd.image1Gray_Portrait.fill_rect(10 + i * 10, 135 + 50, 5, 50, 0x00)
-
-    epd.display_Base(epd.fb)
-
-    while 1:
-        if ReFlag:
-            epd.display_Partial(epd.fb)
-            ReFlag = 0
-        elif SelfFlag:
-            epd.init()
-            epd.display_Base(epd.fb)
-            SelfFlag = 0
-
-        pthread_irq()
-        tp.ICNT_Scan(icnt_dev, icnt_old)
-        key_value = get_key()
-        if key_value == 0 and icnt_dev.X[0] == icnt_old.X[0] and icnt_dev.Y[0] == icnt_old.Y[0]:
-            continue
-
-        if icnt_dev.TouchCount or key_value:
-            if key_value:
-                icnt_dev.X[0] = epd.width + 1
-                icnt_dev.Y[0] = epd.height + 1
-            icnt_dev.TouchCount = 0
-
-            if (icnt_dev.X[0] > 5 and icnt_dev.Y[0] > 10 and icnt_dev.X[0] < 61 and icnt_dev.Y[
-                0] < 24) or key_value == 1:  # Select
-                key_value = 0
-                NumSelect += 1
-                if NumSelect > 4:
-                    NumSelect = 1
-                epd.image1Gray_Portrait.fill_rect(70, 115, 50, 15, 0xff)
-                if NumSelect < 3:
-                    epd.image1Gray_Portrait.text("^", 66 + NumSelect * 8, 115, 0x00)
-                else:
-                    epd.image1Gray_Portrait.text("^", 66 + (NumSelect + 1) * 8, 115, 0x00)
-                ReFlag = 1
-                print("Numer Select ...\r\n")
-
-            if (icnt_dev.X[0] > 30 and icnt_dev.Y[0] > 240 and icnt_dev.X[0] < 66 and icnt_dev.Y[
-                0] < 258) or key_value == 2:  # Display
-                key_value = 0
-                SelfFlag = 1
-                epd.image1Gray_Portrait.fill_rect(66, 100, 50, 30, 0xff)
-                epd.image1Gray_Portrait.text(''.join(buf), 66, 100, 0x00)
-                print("Display ...\r\n")
-
-            if (icnt_dev.X[0] > 72 and icnt_dev.Y[0] > 10 and icnt_dev.X[0] < 123 and icnt_dev.Y[
-                0] < 24) or key_value == 3:  # Adjust
-                key_value = 0
-                temp = NumSelect
-                if NumSelect > 2:
-                    temp += 1
-                if (buf[temp]) == '9':
-                    buf[temp] = '0'
-                else:
-                    buf[temp] = chr(ord(buf[temp]) + 1)
-
-                epd.image1Gray_Portrait.fill_rect(66, 100, 50, 10, 0xff)
-                epd.image1Gray_Portrait.text(''.join(buf), 66, 100, 0x00)
-                ReFlag = 1
-                print("Numer Adjust ...\r\n")
-
-            if icnt_dev.X[0] > 21 and icnt_dev.Y[0] > 270 and icnt_dev.X[0] < 103 and icnt_dev.Y[0] < 288:  # Show/Hied
-                if isHide % 2:
-                    epd.image1Gray_Portrait.rect(5, 10, 51, 14, 0x00)
-                    epd.image1Gray_Portrait.text("Select", 7, 13, 0x00)
-                    epd.image1Gray_Portrait.rect(72, 10, 51, 14, 0x00)
-                    epd.image1Gray_Portrait.text("Adjust", 74, 13, 0x00)
-
-                    epd.image1Gray_Portrait.rect(30, 240, 66, 18, 0x00)
-                    epd.image1Gray_Portrait.text("Display", 35, 245, 0x00)
-
-                    epd.image1Gray_Portrait.rect(21, 270, 82, 18, 0x00)
-                    epd.image1Gray_Portrait.text("Show/Hied", 26, 275, 0x00)
-
-                    epd.image1Gray_Portrait.text("On Sale!!!", 10, 50, 0x00)
-                    epd.image1Gray_Portrait.text("Discount %30", 10, 75, 0x00)
-                    epd.image1Gray_Portrait.text("Price: ", 10, 100, 0x00)
-                    epd.image1Gray_Portrait.text(''.join(buf), 66, 100, 0x00)
-                else:
-                    epd.image1Gray_Portrait.fill_rect(0, 0, 127, 30, 0xff)
-                    epd.image1Gray_Portrait.fill_rect(0, 240, 127, 55, 0xff)
-                isHide += 1
-                SelfFlag = 1
